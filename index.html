@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Policy Slopes Live: Board</title>
+<meta name="description" content="Policy Slopes Live: students place policies between precision and flexibility from their phones.">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+.startcard{max-width:760px;margin:30px auto;padding:30px 32px}
+.startcard h2{font-size:30px;margin-bottom:6px}
+.startcard p{color:var(--ink2);margin:6px 0 18px}
+.startcard .row{display:flex;gap:8px;margin-bottom:8px}
+.startcard input{flex:1;border:1.5px solid var(--line2);border-radius:12px;padding:12px 14px;font-size:18px;font-weight:700}
+.modebadge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;border-radius:999px;padding:4px 10px;background:var(--ice);border:1px solid var(--line);color:var(--muted)}
+.modebadge i{width:9px;height:9px;border-radius:50%;background:#C9D3E0}
+.modebadge.live i{background:var(--green)}
+.modebadge.demo i{background:var(--amber)}
+.modebadge.down i{background:var(--red)}
+.joinbar{display:flex;align-items:center;gap:16px;padding:4px 6px 12px;flex-wrap:wrap}
+.joinbar .qr{width:84px;height:84px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px;flex:none}
+.joinbar .qr svg{width:100%;height:100%;display:block}
+.joinbar .code{font-size:38px;font-weight:800;letter-spacing:.14em;line-height:1}
+.joinbar .url{font-size:14px;color:var(--muted);word-break:break-all}
+.joinbar .right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.lobby{position:absolute;inset:0;background:rgba(255,255,255,.94);border-radius:12px;display:flex;align-items:center;justify-content:center;gap:40px;padding:24px;flex-wrap:wrap}
+.lobby .bigqr{width:min(42vh,340px);aspect-ratio:1;background:#fff;border:2px solid var(--ink);border-radius:18px;padding:12px}
+.lobby .bigqr svg{width:100%;height:100%;display:block}
+.lobby h2{font-size:clamp(28px,3vw,42px);line-height:1.1}
+.lobby .bigcode{font-size:clamp(48px,6vw,84px);font-weight:800;letter-spacing:.16em;color:var(--blue);line-height:1;margin:8px 0}
+.lobby p{color:var(--ink2);margin:6px 0;font-size:18px}
+.riders{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.rider{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:999px;padding:2px 10px 2px 2px;font-weight:700;font-size:14px;background:#fff}
+.rider.locked{border-color:var(--green);background:#F0FAF4}
+.rider.wait{opacity:.55}
+.statusrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 6px 4px;border-top:1px solid var(--line);margin-top:12px}
+.lockcount{font-size:28px;font-weight:800}
+.lockcount small{font-size:15px;color:var(--muted);font-weight:600}
+.statusrow .grow{flex:1;min-width:200px}
+.meter{height:12px;background:var(--frost);border-radius:999px;overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
+.liftcard h3{font-size:clamp(28px,2.6vw,36px)}
+.passwrap{padding:16px}
+.passwrap .img{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;min-height:200px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.passwrap img{display:block;width:100%;height:auto}
+.showing{font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <svg width="76" height="76" viewBox="0 0 100 100" aria-hidden="true">
+      <circle cx="50" cy="50" r="48" fill="#fff" stroke="#D6E4F0" stroke-width="2"/>
+      <path d="M8 78 L34 40 L46 54 L62 24 L92 78 Z" fill="#E7F1F9" stroke="#1B2440" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M62 24 L54 40 L60 37 L64 44 L68 36 L72 40 Z" fill="#fff" stroke="#1B2440" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M62 24 V8" stroke="#1B2440" stroke-width="2.5"/><path d="M62 8 L76 12 L62 16 Z" fill="#E8524A"/>
+      <path d="M22 72 Q40 62 50 70 T80 68" stroke="#3A97DA" stroke-width="2.5" fill="none" stroke-dasharray="4 4"/>
+    </svg>
+    <div>
+      <h1>Policy <span>Slopes</span> Live</h1>
+      <p>Where does each policy sit between <b>precision</b> and <b>flexibility</b>, and at what level of government?</p>
+    </div>
+    <div class="right">
+      <span class="modebadge" id="modeBadge"><i></i><span>Connecting…</span></span>
+      <button class="btn sm hidden" id="endBtn">End session</button>
+    </div>
+  </header>
+
+  <!-- START -->
+  <section id="scrStart">
+    <div class="card resume hidden" id="resumeBar">
+      <b>You have a session in progress.</b>
+      <span style="color:var(--muted)" id="resumeInfo"></span>
+      <span style="flex:1"></span>
+      <button class="btn blue" id="resumeBtn">Resume session</button>
+      <button class="btn" id="freshBtn">Start fresh</button>
+    </div>
+    <div class="card startcard">
+      <div class="caps">Board for your projector</div>
+      <h2>Open the lift</h2>
+      <p>Students scan the QR code on their phones, pick a character and a ride, and place each policy on the slope. Their spots stay hidden until you reveal the class average.</p>
+      <label class="caps" for="className" style="color:var(--muted)">Class name (optional)</label>
+      <div class="row" style="margin-top:6px">
+        <input id="className" maxlength="60" placeholder="e.g., Period 3: The Ice Ice Maybes">
+        <button class="btn" id="diceBtn" title="Random pun name" aria-label="Random pun name">🎲</button>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px">
+        <button class="btn dark big" id="openBtn">Open the lift →</button>
+        <span style="font-size:14px;color:var(--muted)">No accounts or apps needed. Phones join anonymously.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOARD -->
+  <section id="scrBoard" class="hidden">
+    <div class="play">
+      <div class="card boardcard">
+        <div class="joinbar">
+          <div class="qr" id="qrSmall" aria-label="QR code to join"></div>
+          <div>
+            <div class="caps" style="color:var(--muted)">Join on your phone</div>
+            <div class="code" id="roomCode">····</div>
+            <div class="url" id="joinUrl"></div>
+          </div>
+          <div class="right">
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><div class="seg"><button id="vAvg" class="on">Class average</button><button id="vOrig">Individual Run</button></div><span class="showing" id="showing"></span></div>
+          </div>
+        </div>
+        <div style="position:relative">
+          <div id="board"></div>
+          <div class="lobby hidden" id="lobby">
+            <div class="bigqr" id="qrBig"></div>
+            <div>
+              <div class="caps">Scan to ride</div>
+              <h2>Join Policy Slopes</h2>
+              <div class="bigcode" id="roomCode2">····</div>
+              <p>Scan the code, or go to<br><b id="joinUrl2"></b></p>
+              <p style="color:var(--muted);font-size:16px">Pick a character and a ride, then watch the board.</p>
+            </div>
+          </div>
+        </div>
+        <div class="statusrow">
+          <div class="grow">
+            <div class="lockcount" id="lockCount">0 <small>riders</small></div>
+            <div class="meter"><i id="lockMeter"></i></div>
+          </div>
+          <button class="btn blue big hidden" id="revealBtn">Reveal the class average</button>
+        </div>
+        <div class="riders" id="riders" style="padding:10px 6px 4px"></div>
+      </div>
+      <div class="side">
+        <div class="lift" id="policyCard"></div>
+        <div class="card sideacts" id="sideActs"></div>
+        <div class="card log"><h4>Trail log</h4><ol id="logList"></ol></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LODGE -->
+  <section id="scrLodge" class="hidden">
+    <div class="card sendbar">
+      <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="14" width="52" height="36" rx="6" fill="#fff" stroke="#1B2440" stroke-width="2.5"/><rect x="6" y="14" width="14" height="36" rx="6" fill="#1B2440"/><circle cx="13" cy="22" r="2.6" fill="#fff"/><path d="M28 40 L36 28 L41 34 L46 26 L52 40 Z" fill="#E7F1F9" stroke="#1B2440" stroke-width="2" stroke-linejoin="round"/></svg>
+      <div>
+        <div class="caps">The class lift pass</div>
+        <ol>
+          <li>Click <b>Print the lift pass</b> for a paper copy to display.</li>
+          <li>Or <b>Save image</b> / <b>Save PDF</b> to post it in Teams or Brightspace.</li>
+        </ol>
+      </div>
+      <div class="acts">
+        <button class="btn dark big" id="printPass">🎟 Print the lift pass</button>
+        <div style="display:flex;gap:8px"><button class="btn blue" id="dlPass" style="flex:1">⬇ Save image</button><button class="btn blue" id="pdfPass" style="flex:1">⬇ Save PDF</button></div>
+        <button class="btn sm" id="backToSlopes">← Back to the slopes</button>
+      </div>
+    </div>
+    <div class="card passwrap"><div class="img" id="passImg">Printing the lift pass…</div></div>
+  </section>
+
+  <footer>Policy Slopes Live · Federal ◆ State ■ Local ●</footer>
+</div>
+<div id="printArea"></div>
+<div class="toast" id="toast"></div>
+<div id="dlg" class="hidden" style="position:fixed;inset:0;background:rgba(27,36,64,.35);display:flex;align-items:center;justify-content:center;z-index:95;padding:20px"><div class="card" style="max-width:420px;padding:22px 22px 18px"><p id="dlgMsg" style="margin:0 0 16px;font-weight:600"></p><div style="display:flex;gap:10px;justify-content:flex-end"><button class="btn" id="dlgNo">Cancel</button><button class="btn dark" id="dlgYes">Yes</button></div></div></div>
+
+<script src="js/config.js"></script>
+<script src="js/vendor/supabase.js"></script>
+<script src="js/vendor/qrcode.js"></script>
+<script src="js/common.js"></script>
+<script src="js/board.js"></script>
+</body>
+</html>

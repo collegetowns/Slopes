@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F7FBFE">
+<title>Policy Slopes Live: Join</title>
+<link rel="stylesheet" href="css/styles.css">
+<style>
+body{font-size:17px}
+.ph{max-width:520px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inset-bottom))}
+.phtop{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.phtop h1{font-size:22px;text-transform:uppercase;letter-spacing:.06em;line-height:1}
+.phtop h1 span{color:var(--blue)}
+.phtop .modebadge{margin-left:auto}
+.modebadge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border-radius:999px;padding:4px 9px;background:var(--ice);border:1px solid var(--line);color:var(--muted)}
+.modebadge i{width:8px;height:8px;border-radius:50%;background:#C9D3E0}
+.modebadge.live i{background:var(--green)}.modebadge.demo i{background:var(--amber)}.modebadge.down i{background:var(--red)}
+.pc{padding:18px}
+.pc h2{font-size:24px;line-height:1.15;margin-bottom:6px}
+.pc p{margin:4px 0 12px;color:var(--ink2)}
+.codein{width:100%;font-size:40px;font-weight:800;letter-spacing:.3em;text-align:center;text-transform:uppercase;border:2px solid var(--line2);border-radius:14px;padding:10px;margin:8px 0 12px}
+.nm{width:100%;border:1.5px solid var(--line2);border-radius:12px;padding:12px;font-size:18px;font-weight:700;margin:6px 0 12px}
+.prev{display:flex;justify-content:center;margin:4px 0 10px}
+.prev>div{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#fff,var(--frost));border:2px solid var(--line);display:flex;align-items:center;justify-content:center}
+.kinds{grid-template-columns:repeat(5,minmax(0,1fr))}
+.kinds button{aspect-ratio:1}
+.kinds button svg{width:100%;height:auto}
+.opts{margin:10px 0;font-size:14px}
+.opts span.l{width:52px}
+.chip{font-size:15px;padding:6px 12px}
+.dot{width:34px;height:34px}
+.bigbtn{width:100%;font-size:19px;padding:15px;margin-top:12px}
+.center{text-align:center}
+.biga{display:flex;justify-content:center;margin:10px 0}
+.lifttitle{font-size:28px;font-weight:800;line-height:1.12;margin:8px 0 4px;text-wrap:balance}
+.slopebox{margin:10px -6px 0;touch-action:manipulation}
+.slopebox{padding-top:26px}
+.slopebox svg{display:block;width:100%;height:auto;cursor:crosshair;overflow:visible}
+.pbtns{display:grid;grid-template-columns:3fr 2fr;gap:8px;margin-top:10px}
+.pbtns .btn{white-space:nowrap}
+.pbtns .btn{font-size:18px;padding:14px}
+.eyes{font-size:34px;font-weight:800;line-height:1.1;margin:8px 0}
+.small{font-size:14px;color:var(--muted)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.bob{animation:bob 2.4s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.bob{animation:none}}
+</style>
+</head>
+<body>
+<div class="ph">
+  <div class="phtop">
+    <svg width="40" height="40" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" fill="#fff" stroke="#D6E4F0" stroke-width="2"/><path d="M8 78 L34 40 L46 54 L62 24 L92 78 Z" fill="#E7F1F9" stroke="#1B2440" stroke-width="3" stroke-linejoin="round"/><path d="M62 24 V8" stroke="#1B2440" stroke-width="2.5"/><path d="M62 8 L76 12 L62 16 Z" fill="#E8524A"/></svg>
+    <h1>Policy <span>Slopes</span></h1>
+    <span class="modebadge" id="modeBadge"><i></i><span>Connecting…</span></span>
+  </div>
+
+  <section id="sCode" class="card pc hidden">
+    <h2>Join the lift</h2>
+    <p>Type the 4-letter code on the board.</p>
+    <input class="codein" id="codeIn" maxlength="4" autocomplete="off" autocapitalize="characters" inputmode="text" aria-label="Room code">
+    <button class="btn dark bigbtn" id="codeGo">Join →</button>
+  </section>
+
+  <section id="sProfile" class="card pc hidden">
+    <h2>Pick your rider</h2>
+    <div class="prev"><div id="prevAv"></div></div>
+    <input class="nm" id="nameIn" maxlength="24" placeholder="Your first name (optional)" autocomplete="off">
+    <div class="kinds" id="kindGrid"></div>
+    <div class="opts" id="colorRow"></div>
+    <div class="opts" id="styleRow"></div>
+    <div class="opts" id="rideRow"></div>
+    <button class="btn dark bigbtn" id="hopOn">Hop on the lift →</button>
+  </section>
+
+  <section id="sWait" class="card pc center hidden">
+    <div class="biga bob" id="waitAv"></div>
+    <div class="eyes">You're on the lift!</div>
+    <p>Watch the board. The first case is coming up.</p>
+    <button class="btn sm" id="editRider">Change my rider</button>
+  </section>
+
+  <section id="sPlace" class="hidden">
+    <div class="card pc">
+      <div class="caps" id="caseNum">Case</div>
+      <div class="lifttitle" id="caseTitle"></div>
+      <p class="small" id="placeHint">Tap the slope where this policy fits.</p>
+      <div class="slopebox" id="slope"></div>
+      <div class="pbtns">
+        <button class="btn dark" id="lockBtn" disabled>✓ Lock in</button>
+        <button class="btn" id="rerunBtn" disabled>↺ Re-run</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="sLocked" class="card pc center hidden">
+    <div class="biga" id="lockAv"></div>
+    <div class="eyes">Locked in.<br>Eyes up!</div>
+    <p id="lockMsg">Your spot is hidden until your teacher reveals the class average.</p>
+    <button class="btn" id="changeBtn">Change my spot</button>
+  </section>
+
+  <section id="sReveal" class="card pc center hidden">
+    <div class="biga bob" id="revAv"></div>
+    <div class="eyes">Eyes up!</div>
+    <p>The class average is on the board. Next case coming soon.</p>
+  </section>
+
+  <section id="sLodge" class="card pc center hidden">
+    <div class="biga" id="lodgeAv"></div>
+    <div class="eyes">Back at the lodge</div>
+    <p>That's the end of the run. Thanks for riding!</p>
+  </section>
+
+  <section id="sEnded" class="card pc center hidden">
+    <div class="eyes">Session ended</div>
+    <p>Your teacher closed this lift. To join a new one, scan the new code.</p>
+    <button class="btn" id="newCode">Enter a new code</button>
+  </section>
+
+  <p class="small center" id="lostMsg" style="margin-top:14px"></p>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="js/config.js"></script>
+<script src="js/vendor/supabase.js"></script>
+<script src="js/common.js"></script>
+<script src="js/join.js"></script>
+</body>
+</html>
