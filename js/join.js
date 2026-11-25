@@ -2,7 +2,7 @@
 (function(){
 "use strict";
 var params=new URLSearchParams(location.search);
-var room=(params.get("room")||"").toUpperCase().replace(/[^A-Z]/g,"").slice(0,4);
+var room=normRoom(params.get("room"));if(room&&!validRoom(room))room="";
 var P=null,conn=null,lastState=null,lastStateAt=0,joinSentAt=0,resendT=null,editing=false;
 
 function key(){return "policySlopesLive.phone."+room}
@@ -15,10 +15,10 @@ function only(id){["sCode","sProfile","sWait","sPlace","sLocked","sReveal","sLod
 function setBadge(st){var b=$("#modeBadge");b.className="modebadge "+st;b.querySelector("span").textContent=st==="live"?"Live":st==="demo"?"Demo":st==="down"?"Reconnecting…":"Connecting…"}
 
 /* ---------- code entry ---------- */
-function askCode(){only("sCode");$("#codeIn").value=room||"";setTimeout(function(){$("#codeIn").focus()},50)}
+function askCode(){only("sCode");$("#codeIn").value=room?fmtRoom(room):"";setTimeout(function(){$("#codeIn").focus()},50)}
 $("#codeGo").onclick=function(){
-  var c=($("#codeIn").value||"").toUpperCase().replace(/[^A-Z]/g,"");
-  if(c.length!==4){toast("The code has 4 letters");return}
+  var c=normRoom($("#codeIn").value);
+  if(!validRoom(c)){toast("Type the code on the board, like SNOW-42");return}
   var u=new URL(location.href);u.searchParams.set("room",c);location.href=u.href;
 };
 $("#codeIn").addEventListener("keydown",function(e){if(e.key==="Enter")$("#codeGo").click()});
@@ -141,7 +141,7 @@ conn=liveConnect(room,onEvent,function(st){setBadge(st);if(st==="live"||st==="de
 setInterval(function(){
   if(Date.now()-lastStateAt>9000){
     conn.send("hello",{room:room});
-    if(P.joined&&!editing)$("#lostMsg").textContent=lastState?"Lost the board for a moment… reconnecting.":"Looking for the board with code "+room+"… check the code on the screen.";
+    if(P.joined&&!editing)$("#lostMsg").textContent=lastState?"Lost the board for a moment… reconnecting.":"Looking for the board with code "+fmtRoom(room)+"… check the code on the screen.";
   }
 },3000);
 route();

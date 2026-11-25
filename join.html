@@ -19,7 +19,8 @@ body{font-size:17px}
 .pc{padding:18px}
 .pc h2{font-size:24px;line-height:1.15;margin-bottom:6px}
 .pc p{margin:4px 0 12px;color:var(--ink2)}
-.codein{width:100%;font-size:40px;font-weight:800;letter-spacing:.3em;text-align:center;text-transform:uppercase;border:2px solid var(--line2);border-radius:14px;padding:10px;margin:8px 0 12px}
+.codein::placeholder{color:#C9D3E0}
+.codein{width:100%;font-size:34px;font-weight:800;letter-spacing:.1em;text-align:center;text-transform:uppercase;border:2px solid var(--line2);border-radius:14px;padding:10px;margin:8px 0 12px}
 .nm{width:100%;border:1.5px solid var(--line2);border-radius:12px;padding:12px;font-size:18px;font-weight:700;margin:6px 0 12px}
 .prev{display:flex;justify-content:center;margin:4px 0 10px}
 .prev>div{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#fff,var(--frost));border:2px solid var(--line);display:flex;align-items:center;justify-content:center}
@@ -57,8 +58,8 @@ body{font-size:17px}
 
   <section id="sCode" class="card pc hidden">
     <h2>Join the lift</h2>
-    <p>Type the 4-letter code on the board.</p>
-    <input class="codein" id="codeIn" maxlength="4" autocomplete="off" autocapitalize="characters" inputmode="text" aria-label="Room code">
+    <p>Type the code on the board, like <b>SNOW-42</b>.</p>
+    <input class="codein" id="codeIn" maxlength="10" placeholder="SNOW-42" autocomplete="off" autocapitalize="characters" inputmode="text" aria-label="Room code">
     <button class="btn dark bigbtn" id="codeGo">Join →</button>
   </section>
 

@@ -75,8 +75,8 @@ function renderAll(anim){renderLift(anim);renderBoard();renderStatus();renderAct
 function setView(v){H.view=v;$("#vAvg").classList.toggle("on",v==="avg");$("#vOrig").classList.toggle("on",v==="orig");save()}
 function renderJoin(){
   var url=joinURL();
-  $("#roomCode").textContent=H.room;$("#roomCode2").textContent=H.room;
-  $("#joinUrl").textContent=url.replace(/^https?:\/\//,"");$("#joinUrl2").textContent=url.replace(/^https?:\/\//,"").replace(/\?.*$/,"")+"  ·  code "+H.room;
+  $("#roomCode").textContent=fmtRoom(H.room);$("#roomCode2").textContent=fmtRoom(H.room);
+  $("#joinUrl").textContent=url.replace(/^https?:\/\//,"");$("#joinUrl2").textContent=url.replace(/^https?:\/\//,"").replace(/\?.*$/,"")+"  ·  code "+fmtRoom(H.room);
   var q=qrSVG(url);$("#qrSmall").innerHTML=q;$("#qrBig").innerHTML=q;
 }
 function renderBoard(){
@@ -258,7 +258,7 @@ $("#endBtn").onclick=function(){ask("End this session? Phones will be disconnect
 var saved=load();
 if(saved&&saved.room&&saved.phase&&saved.phase!=="ended"&&Date.now()-(saved.created||0)<12*3600*1000){
   $("#resumeBar").classList.remove("hidden");
-  $("#resumeInfo").textContent=(saved.cls?saved.cls+" · ":"")+"room "+saved.room+" · "+Object.keys(saved.roster||{}).length+" riders";
+  $("#resumeInfo").textContent=(saved.cls?saved.cls+" · ":"")+"room "+fmtRoom(saved.room)+" · "+Object.keys(saved.roster||{}).length+" riders";
   $("#resumeBtn").onclick=function(){$("#resumeBar").classList.add("hidden");openSession(saved)};
   $("#freshBtn").onclick=function(){$("#resumeBar").classList.add("hidden");try{localStorage.removeItem(KEY)}catch(e){}};
 }

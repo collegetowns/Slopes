@@ -312,4 +312,8 @@ function cleanProfile(p){
   return {name:String(p.name||"").slice(0,24),kind:KINDS.indexOf(p.kind)>=0?p.kind:"penguin",variant:Math.max(0,Math.min(3,parseInt(p.variant,10)||0)),
     look:LOOKS.indexOf(p.look)>=0?p.look:"none",ride:RIDES.indexOf(p.ride)>=0?p.ride:"none"};
 }
-function roomCode(){var A="ABCDEFGHJKLMNPQRSTUVWXYZ",s="";for(var i=0;i<4;i++)s+=A[Math.floor(Math.random()*A.length)];return s}
+var SKI_WORDS=["SNOW","LIFT","PEAK","LODGE","POWDER","MOGUL","SLOPE","ALPINE","CHALET","GLADE","BUNNY","CABIN","COCOA","FLAKE","IGLOO","SLED","TRAIL","SUMMIT","BOOTS","POLES","FROST","PISTE","YETI","CARVE","GROOMER","RIDGE","GOGGLE","PARKA","MITTEN","SKIS"];
+function roomCode(){return SKI_WORDS[Math.floor(Math.random()*SKI_WORDS.length)]+(10+Math.floor(Math.random()*90))}
+function normRoom(s){return String(s||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,10)}
+function fmtRoom(s){s=normRoom(s);var m=s.match(/^([A-Z]+)(\d+)$/);return m?m[1]+"-"+m[2]:s}
+function validRoom(s){s=normRoom(s);return /^[A-Z]{3,8}\d{2}$/.test(s)||/^[A-Z]{4}$/.test(s)}
